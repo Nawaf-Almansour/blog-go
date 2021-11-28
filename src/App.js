@@ -1,6 +1,9 @@
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-function App() {
+export default function App() {
   return (
+      <Router>
     <div className="container">
       <div className="row">
         <h1 className="mt-3"> GO watch a  movie</h1>
@@ -11,24 +14,43 @@ function App() {
        <nav>
          <ul>
            <li className="list-group-item">
-             <a href="/">Home</a>
+             <Link  path="/" to="/">Home</Link>
            </li>
            <li className="list-group-item">
-             <a href="/movies">Movies</a>
+               <Link  path="/movies" to="/movies">Movies</Link>
            </li>
            <li className="list-group-item">
-             <a href="/admin">Manage Catalogue</a>
+               <Link  path="/admin" to="/admin">Manage Catalogue</Link>
            </li>
 
          </ul>
        </nav>
         </div>
         <div className="col-md-10">
-
+        <Switch>
+            <Route path="/movies">
+                <Movies/>
+            </Route>
+            <Route path="/admin">
+                <Admin/>
+            </Route>
+            <Route path="/">
+                <Home/>
+            </Route>
+        </Switch>
         </div>
       </div>
     </div>
+      </Router>
   );
 }
+function Home() {
+    return <h2>Home</h2>
+}
+function Admin() {
+    return <h2>Admin</h2>
+}
+function Movies() {
+    return <h2>Movies</h2>
+}
 
-export default App;
