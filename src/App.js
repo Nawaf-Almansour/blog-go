@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Home from "./component/Home";
 import Movies from "./component/Movies";
 import Admin from "./component/Admin";
+import Movie from "./component/Movie"
 
 export default function App() {
   return (
@@ -33,6 +34,9 @@ export default function App() {
         <Switch>
             <Route path="/movies">
                 <Movies/>
+            </Route>
+            <Route path="/movies/:id">
+                <Movie/>
             </Route>
             <Route path="/admin">
                 <Admin/>
