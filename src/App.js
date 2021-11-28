@@ -1,5 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Home from "./component/Home";
+import Movies from "./component/Movies";
+import Admin from "./component/Admin";
 
 export default function App() {
   return (
@@ -44,13 +47,3 @@ export default function App() {
       </Router>
   );
 }
-function Home() {
-    return <h2>Home</h2>
-}
-function Admin() {
-    return <h2>Admin</h2>
-}
-function Movies() {
-    return <h2>Movies</h2>
-}
-
