@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Home from "./component/Home";
 import Movies from "./component/Movies";
 import Admin from "./component/Admin";
-import Movie from "./component/Movie"
 import OneMovie from "./component/OneMovie";
-import Categories from "./component/Categories";
+import Genres from "./component/Genres";
 
 export default function App() {
   return (
@@ -26,7 +25,7 @@ export default function App() {
                <Link  path="/movies" to="/movies">Movies</Link>
            </li>
              <li className="list-group-item">
-                 <Link to="/by-category">Categories</Link>
+                 <Link to="/genres">Genres</Link>
              </li>
            <li className="list-group-item">
                <Link  path="/admin" to="/admin">Manage Catalogue</Link>
@@ -41,17 +40,10 @@ export default function App() {
                 <Movies/>
             </Route>
                 <Route path="/movie/:id" component={OneMovie} />
-            <Route
-                exact
-                path="/by-category/drama"
-                render={(props) => <Categories {...props} title={`Drama`} />}
-            />
+            <Route exact path="/genres">
+                <Genres/>
+            </Route>
 
-            <Route
-                exact
-                path="/by-category/comedy"
-                render={(props) => <Categories {...props} title={`Comedy`} />}
-            />
             <Route path="/admin">
                 <Admin/>
             </Route>
