@@ -1,12 +1,11 @@
+import {useParams} from "react-router";
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 
 
-export default function Movies() {
-    const [movies, setMovies] = useState([]);
+export default function OneMovie() {
+    const [movie, setMovie] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         getMovies()
@@ -14,7 +13,7 @@ export default function Movies() {
     }, []);
 
     const getMovies = () => {
-        fetch("http://localhost:4000/v1/movies")
+        fetch("http://localhost:4000/v1/movie/1")
             .then((res) => {
                 if (res.status !== 200) {
                     let err = new Error("Invalid response code: " + res.status);
@@ -23,7 +22,7 @@ export default function Movies() {
                 return res.json()
             })
             .then((json) => {
-                setMovies(json.movies);
+                setMovie(json.movie);
                 setIsLoaded(true)
             })
             .catch((err) => {
@@ -35,22 +34,20 @@ export default function Movies() {
     return (
         <>
 
-            <h2>Movies</h2>
-            {error ? (
-                <h2>Error : {error.message}</h2>
-            ) : !isLoaded ? (
-                    <h2>Loading ...</h2>
-                ) :
-                <ul>
-                    {movies.map((m) => (
-                        <li key={m.id}>
-                            <Link to={`/movie/${m.id}`}>
-                                {m.title}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            }
+            <h2>Movie: {movie.title} {movie.year}</h2>
+
+            <table className="table table-compact table-striped">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <strong>Title:</strong>
+                    </td>
+                    <td>{movie.title}</td>
+                </tr>
+                </tbody>
+            </table>
+
         </>
     )
 }
