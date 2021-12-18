@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
-import Input from "./form-components";
+import Input from "./form-components/Input";
+import TextArea from "./form-components/TextArea";
 
 
 export default function EditMovie() {
@@ -79,19 +80,13 @@ export default function EditMovie() {
                     handleChange={handleChange}
                     placeholder={'Rating'}
                 />
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">
-                        Description
-                    </label>
-                    <textarea
-                        className="form-control"
-                        id="description"
-                        name="description"
-                        rows="3"
-                        value={movie.description}
-                        onChange={handleChange}
-                    />
-                </div>
+                <TextArea
+                    title={"Description"}
+                    name={'description'}
+                    rows={3}
+                    value={movie.description}
+                    handleChange={handleChange}
+                />
                 <hr/>
                 <button className="btn btn-primary">Save</button>
             </form>
