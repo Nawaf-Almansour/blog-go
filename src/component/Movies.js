@@ -41,15 +41,16 @@ export default function Movies() {
             ) : !isLoaded ? (
                     <h2>Loading ...</h2>
                 ) :
-                <ul>
-                    {movies.map((m) => (
-                        <li key={m.id}>
-                            <Link to={`/movie/${m.id}`}>
+                <div className="list-group">
+                {movies.map((m) => (
+                            <Link
+                                key={m.id}
+                                className="list-group-item list-group-item-action"
+                                to={`/movie/${m.id}`}>
                                 {m.title}
                             </Link>
-                        </li>
                     ))}
-                </ul>
+                </div>
             }
         </>
     )

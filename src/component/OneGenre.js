@@ -4,13 +4,14 @@ import {Link} from "react-router-dom";
 
 
 export default function OneGenre(props) {
+    const [genreName, setGenreName] = useState(String);
     const [movies, setMovies] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         getMovies()
-
+        setGenreName(props.location.genreName)
     }, []);
 
     const getMovies = () => {
@@ -40,12 +41,15 @@ export default function OneGenre(props) {
     } else {
         return (
             <>
-                <h2>Genres: </h2>
+                <h2>Genres: {genreName}</h2>
                 <div className="list-group">
                     {movies.map((m) => (
-                            <Link className="list-group-item list-group-item-action" to={`/movie/${m.id}`}>
-                                {m.title}
-                            </Link>
+                        <Link
+                            key={m.id}
+                            className="list-group-item list-group-item-action"
+                            to={`/movie/${m.id}`}>
+                            {m.title}
+                        </Link>
                     ))}
                 </div>
             </>

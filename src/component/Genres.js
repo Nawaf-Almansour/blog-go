@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
 
-
 export default function Genres() {
     const [genres, setGenres] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -10,28 +9,28 @@ export default function Genres() {
 
 
     useEffect(() => {
-    getGenres()
+        getGenres()
 
-}, []);
+    }, []);
 
-const getGenres = () => {
-    fetch("http://localhost:4000/v1/genres")
-        .then((res) => {
-            if (res.status !== 200) {
-                let err = new Error("Invalid response code: " + res.status);
-                setError(err)
-            }
-            return res.json()
-        })
-        .then((json) => {
-            setGenres(json.genres);
-            setIsLoaded(true)
-        })
-        .catch((err) => {
-            setIsLoaded(true)
-            // setError(err)
-        });
-}
+    const getGenres = () => {
+        fetch("http://localhost:4000/v1/genres")
+            .then((res) => {
+                if (res.status !== 200) {
+                    let err = new Error("Invalid response code: " + res.status);
+                    setError(err)
+                }
+                return res.json()
+            })
+            .then((json) => {
+                setGenres(json.genres);
+                setIsLoaded(true)
+            })
+            .catch((err) => {
+                setIsLoaded(true)
+                // setError(err)
+            });
+    }
 
     if (error) {
         return (<p>Error : {error.message}</p>)
@@ -41,15 +40,19 @@ const getGenres = () => {
         return (
             <>
                 <h2>Genres</h2>
-<ul>
-    {genres.map((m) =>(
-        <li key={m.id}>
-            <Link to={`/genre/${m.id}`}>
-                {m.genre_name}
-            </Link>
-        </li>
-    ))}
-</ul>
+                <div className="list-group">
+                    {genres.map((m) => (
+                        <Link
+                            key={m.id}
+                            className="list-group-item list-group-item-action"
+                            to={{
+                                pathname: `/genre/${m.id}`,
+                                genreName: m.genre_name,
+                            }}>
+                            {m.genre_name}
+                        </Link>
+                    ))}
+                </div>
             </>
         )
     }
