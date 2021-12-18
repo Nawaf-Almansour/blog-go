@@ -10,6 +10,8 @@ export default function EditMovie(props) {
         {id: 0, title: "", description: "", release_date: "", mpaa_rating: "", runtime: "", rating: ""});
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
+    const [errors, setErrors] = useState([]);
+
 
     const mpaaOptions = [
         {value: 'G', id: "G"},
@@ -57,16 +59,27 @@ export default function EditMovie(props) {
         }
     }
     const postMovie = (movie) => {
-        const req = {
+        let errors = [];
+        if(movie.title === ""){errors.push("title")}
+        if(movie.description === ""){errors.push("description")}
+        if(movie.release_date === ""){errors.push("release_date")}
+        if(movie.mpaa_rating === ""){errors.push("mpaa_rating")}
+        if(movie.runtime === ""){errors.push("runtime")}
+        if(movie.rating === ""){errors.push("rating")}
+        setErrors(errors)
+        if (errors.length > 0){return false}
+
+            const req = {
             method: 'POST',
             body :  JSON.stringify(movie)
         }
         fetch("http://localhost:4000/v1/admin/editmovie", req)
             .then((res) => res.json())
-            .then(data => {
-                console.log(data)
-            })
 
+    }
+
+    const hasError = (key) => {
+return errors.indexOf(key) !== -1;
     }
 
     const handleChange = (evt) => {
@@ -99,50 +112,68 @@ export default function EditMovie(props) {
                 <form onSubmit={handleSubmit}>
                     <Input
                         title={"Title"}
+                        className={hasError("title") ? "is-invalid" : ""}
                         type={"text"}
                         name={'title'}
                         value={movie.title}
                         handleChange={handleChange}
                         placeholder={'Title'}
+                        errorDiv={hasError("title") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a title"}
                     />
                     <Input
                         title={" Release date"}
+                        className={hasError("release_date") ? "is-invalid" : ""}
                         type={"date"}
                         name={'release_date'}
                         value={movie.release_date}
                         handleChange={handleChange}
                         placeholder={' Release date'}
+                        errorDiv={hasError("release_date") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a Release date"}
                     />
                     <Input
                         title={"Runtime"}
+                        className={hasError("runtime") ? "is-invalid" : ""}
                         type={"text"}
                         name={'runtime'}
                         value={movie.runtime}
                         handleChange={handleChange}
                         placeholder={'Runtime'}
+                        errorDiv={hasError("runtime") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a runtime"}
                     />
                     <Select
                         title={"MPAA Rating"}
+                        className={hasError("mpaa_rating") ? "is-invalid" : ""}
                         name={'mpaa_rating'}
                         value={movie.rating}
                         handleChange={handleChange}
                         placeholder={'Choose...'}
                         options={mpaaOptions}
+                        errorDiv={hasError("mpaa_rating") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a mpaa rating"}
                     />
                     <Input
                         title={"Rating"}
+                        className={hasError("rating") ? "is-invalid" : ""}
                         type={"text"}
                         name={'rating'}
                         value={movie.rating}
                         handleChange={handleChange}
                         placeholder={'Rating'}
+                        errorDiv={hasError("rating") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a rating"}
                     />
                     <TextArea
                         title={"Description"}
+                        className={hasError("description") ? "is-invalid" : ""}
                         name={'description'}
                         rows={3}
                         value={movie.description}
                         handleChange={handleChange}
+                        errorDiv={hasError("description") ? "text-danger" : "d-none"}
+                        errorMsg={"Please enter a description"}
                     />
                     <hr/>
                     <button on className="btn btn-primary">Save</button>

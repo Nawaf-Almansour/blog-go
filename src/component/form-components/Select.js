@@ -21,6 +21,9 @@ const Select = (props) => {
                     )
                 })}
             </select>
+            <div className={props.errorDiv}>
+                {props.errorMsg}
+            </div>
         </div>
     );
 }
