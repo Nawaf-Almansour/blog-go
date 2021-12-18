@@ -2,10 +2,12 @@ import {useEffect, useState} from "react";
 import Input from "./form-components/Input";
 import TextArea from "./form-components/TextArea";
 import Select from "./form-components/Select";
+import "./EditMovie.css";
 
 
-export default function EditMovie() {
-    const [movie, setMovie] = useState([]);
+export default function EditMovie(props) {
+    const [movie, setMovie] = useState(
+        {id: 0, title: "", description: "", release_date: "", mpaa_rating: "", runtime: "", rating: ""});
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
 
@@ -15,6 +17,7 @@ export default function EditMovie() {
         {value: 'PG14', id: "PG14"},
         {value: 'R', id: "R"},
         {value: 'NC17', id: "NC17"}]
+    const id = props.match.params.id
 
     useEffect(() => {
         getMovies()
@@ -22,6 +25,48 @@ export default function EditMovie() {
     }, []);
 
     const getMovies = () => {
+        if (id > 0) {
+            fetch("http://localhost:4000/v1/movie/" + id)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        let err = new Error("Invalid response code: " + res.status);
+                        setError(err)
+                    }
+                    return res.json()
+                })
+                .then((json) => {
+                    const releaseDate = new Date(json.movie.release_date);
+                    // setMovie(json.movie)
+                    setMovie({
+                        id: id,
+                        title: json.movie.title,
+                        description: json.movie.description,
+                        release_date: releaseDate.toISOString().split("T")[0],
+                        mpaa_rating: json.movie.mpaa_rating,
+                        runtime: json.movie.rating,
+                        rating: json.movie.description,
+                    })
+                    setIsLoaded(true)
+                })
+                .catch((err) => {
+                    setIsLoaded(true)
+                    // setError(err)
+                });
+        } else {
+           setIsLoaded(true)
+        }
+    }
+    const postMovie = (movie) => {
+        const req = {
+            method: 'POST',
+            body :  JSON.stringify(movie)
+        }
+        fetch("http://localhost:4000/v1/admin/editmovie", req)
+            .then((res) => res.json())
+            .then(data => {
+                console.log(data)
+            })
+
     }
 
     const handleChange = (evt) => {
@@ -35,81 +80,77 @@ export default function EditMovie() {
         }))
     }
 
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        const data = new FormData(evt.target)
+        const payload = Object.fromEntries(data.entries())
+        postMovie(payload)
+    };
 
-    return (
-        <>
-            <h2>Edit Movie</h2>
-            <hr/>
-            <form method="post">
-                <Input
-                    title={"Title"}
-                    type={"text"}
-                    name={'title'}
-                    value={movie.title}
-                    handleChange={handleChange}
-                    placeholder={'Title'}
-                />
-                <Input
-                    title={" Release date"}
-                    type={"text"}
-                    name={'release_date'}
-                    value={movie.release_date}
-                    handleChange={handleChange}
-                    placeholder={' Release date'}
-                />
-                <Input
-                    title={"Runtime"}
-                    type={"text"}
-                    name={'runtime'}
-                    value={movie.runtime}
-                    handleChange={handleChange}
-                    placeholder={'Runtime'}
-                />
-                {/*<div className="mb-3">*/}
-                {/*    <label htmlFor="mpaa_rating" className="form-label">*/}
-                {/*        MPAA Rating*/}
-                {/*    </label>*/}
-                {/*    <select name="mpaa_rating" id="mpaa_rating"*/}
-                {/*            value={movie.mpaa_rating} className="form-select"*/}
-                {/*            onChange={handleChange}>*/}
-                {/*        <option className="form-select">Choose...</option>*/}
-                {/*        <option className="form-select" value="G">G</option>*/}
-                {/*        <option className="form-select" value="PG">PG</option>*/}
-                {/*        <option className="form-select" value="PG14">PG14</option>*/}
-                {/*        <option className="form-select" value="R">R</option>*/}
-                {/*        <option className="form-select" value="NC17">NC17</option>*/}
-                {/*    </select>*/}
-                {/*</div>*/}
-                <Select
-                    title={"MPAA Rating"}
-                    name={'mpaa_rating'}
-                    value={movie.rating}
-                    handleChange={handleChange}
-                    placeholder={'Choose...'}
-                    options={mpaaOptions}
-                />
-                <Input
-                    title={"Rating"}
-                    type={"text"}
-                    name={'rating'}
-                    value={movie.rating}
-                    handleChange={handleChange}
-                    placeholder={'Rating'}
-                />
-                <TextArea
-                    title={"Description"}
-                    name={'description'}
-                    rows={3}
-                    value={movie.description}
-                    handleChange={handleChange}
-                />
+    if (error) {
+        return (<p>Error : {error.message}</p>)
+    } else if (!isLoaded) {
+        return (<p>Loading...</p>)
+    } else {
+        return (
+            <>
+                <h2>Edit Movie</h2>
                 <hr/>
-                <button className="btn btn-primary">Save</button>
-            </form>
-            <div className="mb-3">
-                <pre>{JSON.stringify(movie, null, 3)}</pre>
-            </div>
-
-        </>
-    )
+                <form onSubmit={handleSubmit}>
+                    <Input
+                        title={"Title"}
+                        type={"text"}
+                        name={'title'}
+                        value={movie.title}
+                        handleChange={handleChange}
+                        placeholder={'Title'}
+                    />
+                    <Input
+                        title={" Release date"}
+                        type={"date"}
+                        name={'release_date'}
+                        value={movie.release_date}
+                        handleChange={handleChange}
+                        placeholder={' Release date'}
+                    />
+                    <Input
+                        title={"Runtime"}
+                        type={"text"}
+                        name={'runtime'}
+                        value={movie.runtime}
+                        handleChange={handleChange}
+                        placeholder={'Runtime'}
+                    />
+                    <Select
+                        title={"MPAA Rating"}
+                        name={'mpaa_rating'}
+                        value={movie.rating}
+                        handleChange={handleChange}
+                        placeholder={'Choose...'}
+                        options={mpaaOptions}
+                    />
+                    <Input
+                        title={"Rating"}
+                        type={"text"}
+                        name={'rating'}
+                        value={movie.rating}
+                        handleChange={handleChange}
+                        placeholder={'Rating'}
+                    />
+                    <TextArea
+                        title={"Description"}
+                        name={'description'}
+                        rows={3}
+                        value={movie.description}
+                        handleChange={handleChange}
+                    />
+                    <hr/>
+                    <button on className="btn btn-primary">Save</button>
+                </form>
+                <div className="mb-3">
+                    <pre>{JSON.stringify(movie, null, 3)}</pre>
+                </div>
+            </>
+        )
+    }
 }
