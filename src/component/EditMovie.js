@@ -1,12 +1,20 @@
 import {useEffect, useState} from "react";
 import Input from "./form-components/Input";
 import TextArea from "./form-components/TextArea";
+import Select from "./form-components/Select";
 
 
 export default function EditMovie() {
     const [movie, setMovie] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
+
+    const mpaaOptions = [
+        {value: 'G', id: "G"},
+        {value: 'PG', id: "PG"},
+        {value: 'PG14', id: "PG14"},
+        {value: 'R', id: "R"},
+        {value: 'NC17', id: "NC17"}]
 
     useEffect(() => {
         getMovies()
@@ -57,21 +65,29 @@ export default function EditMovie() {
                     handleChange={handleChange}
                     placeholder={'Runtime'}
                 />
-                <div className="mb-3">
-                    <label htmlFor="mpaa_rating" className="form-label">
-                        MPAA Rating
-                    </label>
-                    <select name="mpaa_rating" id="mpaa_rating"
-                            value={movie.mpaa_rating} className="form-select"
-                            onChange={handleChange}>
-                        <option className="form-select">Choose...</option>
-                        <option className="form-select" value="G">G</option>
-                        <option className="form-select" value="PG">PG</option>
-                        <option className="form-select" value="PG14">PG14</option>
-                        <option className="form-select" value="R">R</option>
-                        <option className="form-select" value="NC17">NC17</option>
-                    </select>
-                </div>
+                {/*<div className="mb-3">*/}
+                {/*    <label htmlFor="mpaa_rating" className="form-label">*/}
+                {/*        MPAA Rating*/}
+                {/*    </label>*/}
+                {/*    <select name="mpaa_rating" id="mpaa_rating"*/}
+                {/*            value={movie.mpaa_rating} className="form-select"*/}
+                {/*            onChange={handleChange}>*/}
+                {/*        <option className="form-select">Choose...</option>*/}
+                {/*        <option className="form-select" value="G">G</option>*/}
+                {/*        <option className="form-select" value="PG">PG</option>*/}
+                {/*        <option className="form-select" value="PG14">PG14</option>*/}
+                {/*        <option className="form-select" value="R">R</option>*/}
+                {/*        <option className="form-select" value="NC17">NC17</option>*/}
+                {/*    </select>*/}
+                {/*</div>*/}
+                <Select
+                    title={"MPAA Rating"}
+                    name={'mpaa_rating'}
+                    value={movie.rating}
+                    handleChange={handleChange}
+                    placeholder={'Choose...'}
+                    options={mpaaOptions}
+                />
                 <Input
                     title={"Rating"}
                     type={"text"}
@@ -91,9 +107,9 @@ export default function EditMovie() {
                 <button className="btn btn-primary">Save</button>
             </form>
             <div className="mb-3">
-                <pre>{JSON.stringify(movie, null,3)}</pre>
+                <pre>{JSON.stringify(movie, null, 3)}</pre>
             </div>
 
-            </>
+        </>
     )
 }
