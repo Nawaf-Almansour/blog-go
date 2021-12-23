@@ -3,6 +3,7 @@ import Input from "./form-components/Input";
 import TextArea from "./form-components/TextArea";
 import Select from "./form-components/Select";
 import "./EditMovie.css";
+import Alert from "./ui-components/Alert";
 
 
 export default function EditMovie(props) {
@@ -11,6 +12,7 @@ export default function EditMovie(props) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [errors, setErrors] = useState([]);
+    const [alert, setAlert] = useState([{type:"d-none", message:""}]);
 
 
     const mpaaOptions = [
@@ -40,7 +42,7 @@ export default function EditMovie(props) {
                     const releaseDate = new Date(json.movie.release_date);
                     // setMovie(json.movie)
                     setMovie({
-                        id: id,
+                        id: json.movie.id,
                         title: json.movie.title,
                         description: json.movie.description,
                         release_date: releaseDate.toISOString().split("T")[0],
@@ -48,6 +50,7 @@ export default function EditMovie(props) {
                         runtime: json.movie.rating,
                         rating: json.movie.description,
                     })
+                    console.log(movie)
                     setIsLoaded(true)
                 })
                 .catch((err) => {
@@ -58,23 +61,31 @@ export default function EditMovie(props) {
            setIsLoaded(true)
         }
     }
-    const postMovie = (movie) => {
+    const postMovie = (payloadMovie) => {
         let errors = [];
-        if(movie.title === ""){errors.push("title")}
-        if(movie.description === ""){errors.push("description")}
-        if(movie.release_date === ""){errors.push("release_date")}
-        if(movie.mpaa_rating === ""){errors.push("mpaa_rating")}
-        if(movie.runtime === ""){errors.push("runtime")}
-        if(movie.rating === ""){errors.push("rating")}
+        if(payloadMovie.title === ""){errors.push("title")}
+        if(payloadMovie.description === ""){errors.push("description")}
+        if(payloadMovie.release_date === ""){errors.push("release_date")}
+        if(payloadMovie.mpaa_rating === ""){errors.push("mpaa_rating")}
+        if(payloadMovie.runtime === ""){errors.push("runtime")}
+        if(payloadMovie.rating === ""){errors.push("rating")}
         setErrors(errors)
         if (errors.length > 0){return false}
 
             const req = {
             method: 'POST',
-            body :  JSON.stringify(movie)
+            body :  JSON.stringify(payloadMovie)
         }
+        console.log(JSON.stringify(payloadMovie))
         fetch("http://localhost:4000/v1/admin/editmovie", req)
             .then((res) => res.json())
+            .then(data => {
+                if (data.error){
+                    setAlert({type: 'alert-danger', message:data.error.message})
+                } else {
+                    setAlert({type: 'alert-success', message:"Changes saved !"})
+                }
+            }).catch(err => console.error(err))
 
     }
 
@@ -97,6 +108,7 @@ return errors.indexOf(key) !== -1;
         evt.preventDefault();
         const data = new FormData(evt.target)
         const payload = Object.fromEntries(data.entries())
+        console.log(payload)
         postMovie(payload)
     };
 
@@ -108,8 +120,19 @@ return errors.indexOf(key) !== -1;
         return (
             <>
                 <h2>Edit Movie</h2>
+                <Alert
+                alertType={alert.type}
+                alertMessage={alert.message}
+                />
                 <hr/>
                 <form onSubmit={handleSubmit}>
+                    <input
+                        type="hidden"
+                        name="id"
+                        id="id"
+                        value={movie.id}
+                        onChange={handleChange}
+                    />
                     <Input
                         title={"Title"}
                         className={hasError("title") ? "is-invalid" : ""}
@@ -178,9 +201,9 @@ return errors.indexOf(key) !== -1;
                     <hr/>
                     <button on className="btn btn-primary">Save</button>
                 </form>
-                <div className="mb-3">
-                    <pre>{JSON.stringify(movie, null, 3)}</pre>
-                </div>
+                {/*<div className="mb-3">*/}
+                {/*    <pre>{JSON.stringify(movie, null, 3)}</pre>*/}
+                {/*</div>*/}
             </>
         )
     }
