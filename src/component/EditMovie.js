@@ -4,6 +4,9 @@ import TextArea from "./form-components/TextArea";
 import Select from "./form-components/Select";
 import "./EditMovie.css";
 import Alert from "./ui-components/Alert";
+import Link from "react-router-dom/es/Link";
+import {confirmAlert} from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 export default function EditMovie(props) {
@@ -76,7 +79,6 @@ export default function EditMovie(props) {
             method: 'POST',
             body :  JSON.stringify(payloadMovie)
         }
-        console.log(JSON.stringify(payloadMovie))
         fetch("http://localhost:4000/v1/admin/editmovie", req)
             .then((res) => res.json())
             .then(data => {
@@ -111,6 +113,38 @@ return errors.indexOf(key) !== -1;
         console.log(payload)
         postMovie(payload)
     };
+
+    const handleDeleteMovie = (evt) => {
+        confirmAlert({
+            title: `Delete Movie: ${movie.title}`,
+            message: 'Are you sure to do this.',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {deleteMovie()}
+                },
+                {
+                    label: 'No',
+                    onClick: () => {
+                    }
+                }
+            ]
+        });
+    }
+    const deleteMovie = () => {
+        fetch("http://localhost:4000/v1/admin/deletemovie/" + movie.id , { method: "GET"})
+            .then((res) => res.json())
+            .then(data => {
+                if (data.error){
+                    setAlert({type: 'alert-danger', message:data.error.message})
+                } else {
+                    // setAlert({type: 'alert-success', message:"Changes saved !"})
+                    props.history.push({pathname:"/admin"})
+                }
+            }).catch(err => console.error(err))
+    };
+
+
 
     if (error) {
         return (<p>Error : {error.message}</p>)
@@ -200,6 +234,10 @@ return errors.indexOf(key) !== -1;
                     />
                     <hr/>
                     <button on className="btn btn-primary">Save</button>
+                    <Link to={"/admin"} className={"btn btn-warning ms-1"}> Cancel</Link>
+                    {movie.id > 0 && (
+                    <a href="#!" onClick={() => handleDeleteMovie()} className="btn btn-danger ms-1">Delete</a>
+                    )}
                 </form>
                 {/*<div className="mb-3">*/}
                 {/*    <pre>{JSON.stringify(movie, null, 3)}</pre>*/}
