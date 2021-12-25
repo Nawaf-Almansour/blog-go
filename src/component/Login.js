@@ -37,7 +37,31 @@ export default function Login(props) {
         let errors = [];
         if (user.email === "") {errors.push("email")}
         if (user.password === "") {errors.push("password")}
-        setErrors(errors)
+        setErrors(errors);
+
+        if (errors.length > 0){return false}
+
+        const req = {
+            method: 'POST',
+            body :  JSON.stringify(user)
+        }
+        fetch("http://localhost:4000/v1/signin", req)
+            .then((res) => res.json())
+            .then(data => {
+                if (data.error){
+                    setAlert({type: 'alert-danger', message:data.error.message})
+                } else {
+                    handleJWTChange(Object.values(data)[0]);
+                    props.history.push({
+                        pathname: "/admin",
+                    })
+                    setAlert({type: 'alert-success', message:"Login!"})
+                }
+            }).catch(err => console.error(err))
+    }
+
+    const handleJWTChange = (jwt) => {
+        props.handleJWTChange(jwt)
     }
 
     return (
@@ -74,9 +98,9 @@ export default function Login(props) {
                 <hr />
                 <button className="btn btn-primary">Login</button>
             </form>
-            <div className="mb-3">
-                <pre>{JSON.stringify(user, null, 3)}</pre>
-            </div>
+            {/*<div className="mb-3">*/}
+            {/*    <pre>{JSON.stringify(user, null, 3)}</pre>*/}
+            {/*</div>*/}
 
 
 
