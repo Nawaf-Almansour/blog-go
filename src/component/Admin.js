@@ -8,7 +8,7 @@ export default function Admin() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        getMovies()
+        getMovies();
 
     }, []);
 

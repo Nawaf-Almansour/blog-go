@@ -1,34 +1,34 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
-
-export default function OneMovie() {
+export default function OneMovie(props) {
     const [movie, setMovie] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        getMovies()
+        const getMovies = () => {
+          return fetch("http://localhost:4000/v1/movie/" + props.match.params.id)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        let err = new Error("Invalid response code: " + res.status);
+                        setError(err)
+                    }
+                    return res.json()
+                })
+                .then((json) => {
+                    setMovie(json.movie);
+                    setIsLoaded(true)
+                })
+                .catch((err) => {
+                    setIsLoaded(true)
+                    // setError(err)
+                });
+        };
+        getMovies();
 
-    }, []);
+    }, [props.match.params.id]);
 
-    const getMovies = () => {
-        fetch("http://localhost:4000/v1/movie/1")
-            .then((res) => {
-                if (res.status !== 200) {
-                    let err = new Error("Invalid response code: " + res.status);
-                    setError(err)
-                }
-                return res.json()
-            })
-            .then((json) => {
-                setMovie(json.movie);
-                setIsLoaded(true)
-            })
-            .catch((err) => {
-                setIsLoaded(true)
-                // setError(err)
-            });
-    }
+
 
 
     if (movie.genres) {
