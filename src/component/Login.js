@@ -52,6 +52,7 @@ export default function Login(props) {
                     setAlert({type: 'alert-danger', message:data.error.message})
                 } else {
                     handleJWTChange(Object.values(data)[0]);
+                    window.localStorage.setItem("jwt", JSON.stringify(Object.values(data)[0]))
                     props.history.push({
                         pathname: "/admin",
                     })

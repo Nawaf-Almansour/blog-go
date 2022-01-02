@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import Home from "./component/Home";
 import Movies from "./component/Movies";
@@ -13,12 +13,21 @@ export default function App() {
     const [jwt, setJwt] = useState("")
     let loginLink
 
+    useEffect(() => {
+let t = window.localStorage.getItem("jwt")
+        if (t){
+            if (jwt === ""){
+                setJwt(JSON.parse(t))
+            }
+        }
 
+    }, []);
     const handleJWTChange = (jwt) => {
         setJwt(jwt)
     }
     const logout = () => {
-        setJwt("")
+        setJwt("");
+        window.localStorage.removeItem("jwt")
     }
 
     if (jwt === "") {
