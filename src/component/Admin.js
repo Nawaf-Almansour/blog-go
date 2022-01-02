@@ -2,12 +2,18 @@ import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
 
-export default function Admin() {
+export default function Admin(props) {
     const [movies, setMovies] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (props.jwt === ""){
+            props.history.push({
+                pathname: "/login"
+            });
+            return;
+        }
         getMovies();
 
     }, []);

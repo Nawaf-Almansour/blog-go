@@ -81,10 +81,12 @@ export default function App() {
                             <Route exact path="/login" component={(props) => <Login {...props} handleJWTChange={handleJWTChange} />}/>
 
 
-                            <Route path="/admin/movie/:id" component={EditMovie}/>
-                            <Route path="/admin">
-                                <Admin/>
-                            </Route>
+                            <Route path="/admin/movie/:id" component={(props) =>(
+                                <EditMovie {...props} jwt={jwt}/>
+                            )}/>
+                            <Route path="/admin" component={(props) =>(
+                                <Admin {...props} jwt={jwt} />
+                                )}/>
                             <Route path="/">
                                 <Home/>
                             </Route>

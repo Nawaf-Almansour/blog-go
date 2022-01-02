@@ -27,6 +27,13 @@ export default function EditMovie(props) {
     const id = props.match.params.id
 
     useEffect(() => {
+        if (props.jwt === ""){
+            props.history.push({
+                pathname: "/login"
+            });
+            return;
+
+        }
         getMovies()
 
     }, []);
@@ -74,12 +81,15 @@ export default function EditMovie(props) {
         if(payloadMovie.rating === ""){errors.push("rating")}
         setErrors(errors)
         if (errors.length > 0){return false}
-
-            const req = {
+const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + props.jwt)
+            const requestOptions = {
             method: 'POST',
-            body :  JSON.stringify(payloadMovie)
+            body :  JSON.stringify(payloadMovie),
+            headers: myHeaders
         }
-        fetch("http://localhost:4000/v1/admin/editmovie", req)
+        fetch("http://localhost:4000/v1/admin/editmovie", requestOptions)
             .then((res) => res.json())
             .then(data => {
                 if (data.error){
