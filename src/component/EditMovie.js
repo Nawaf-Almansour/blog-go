@@ -142,7 +142,14 @@ return errors.indexOf(key) !== -1;
         });
     }
     const deleteMovie = () => {
-        fetch("http://localhost:4000/v1/admin/deletemovie/" + movie.id , { method: "GET"})
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + props.jwt)
+        const requestOptions = {
+            method: 'GET',
+            headers: myHeaders
+        }
+        fetch("http://localhost:4000/v1/admin/deletemovie/" + movie.id , requestOptions)
             .then((res) => res.json())
             .then(data => {
                 if (data.error){
