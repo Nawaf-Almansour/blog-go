@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Input from './form-components/Input';
+import {Link} from "react-router-dom";
 
 
 export default function Genres() {
@@ -118,13 +119,14 @@ export default function Genres() {
                 }
             <div className="list-group">
                 {movies.map((m, index) => (
-                    <a key={index} className="list-group-item list-group-item-action"
-                    href="#!">
+                    <Link key={index} className="list-group-item list-group-item-action"
+                    to={`/moviesgraphql/${m.id}`}
+                    >
                         <strong>{m.title}</strong>
                         <small>({m.year}) - {m.runtime} minutes</small>
                         <br/>
                         {m.description.slice(0, 80)}...
-                    </a>
+                    </Link>
                     ))}
             </div>
         </>

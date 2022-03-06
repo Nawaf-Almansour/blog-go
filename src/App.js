@@ -9,6 +9,7 @@ import OneGenre from "./component/OneGenre";
 import EditMovie from "./component/EditMovie";
 import Login from "./component/Login";
 import GraphQL from "./component/GraphQL";
+import OneMovieGraphQL from "./component/OneMovieGraphQL";
 
 export default function App() {
     const [jwt, setJwt] = useState("")
@@ -83,6 +84,8 @@ let t = window.localStorage.getItem("jwt")
                     <div className="col-md-10">
                         <Switch>
                             <Route path="/movie/:id" component={OneMovie}/>
+                            <Route path="/moviesgraphql/:id" component={OneMovieGraphQL}/>
+
                             <Route path="/movies">
                                 <Movies/>
                             </Route>
