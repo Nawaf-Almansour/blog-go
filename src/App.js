@@ -8,6 +8,7 @@ import Genres from "./component/Genres";
 import OneGenre from "./component/OneGenre";
 import EditMovie from "./component/EditMovie";
 import Login from "./component/Login";
+import GraphQL from "./component/GraphQL";
 
 export default function App() {
     const [jwt, setJwt] = useState("")
@@ -72,7 +73,10 @@ let t = window.localStorage.getItem("jwt")
                                 </li>
                                     </>
                                 }
+                                <li className="list-group-item">
+                                    <Link path="/graphql" to="/graphql">Graphql</Link>
 
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -85,6 +89,10 @@ let t = window.localStorage.getItem("jwt")
                             <Route path="/genre/:id" component={OneGenre}/>
                             <Route exact path="/genres">
                                 <Genres/>
+                            </Route>
+
+                            <Route exact path="/graphql">
+                                <GraphQL/>
                             </Route>
 
                             <Route exact path="/login" component={(props) => <Login {...props} handleJWTChange={handleJWTChange} />}/>
