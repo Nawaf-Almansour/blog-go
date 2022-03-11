@@ -53,7 +53,7 @@ export default function Genres() {
     }
 
     useEffect(() => {
-        if (searchTerm.length > 0){
+        if (searchTerm.length > 2){
             performSearch()
         }else {
             fetchMovies()
